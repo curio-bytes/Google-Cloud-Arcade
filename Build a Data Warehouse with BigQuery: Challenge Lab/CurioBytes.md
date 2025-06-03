@@ -25,7 +25,7 @@ Build a Data Warehouse with BigQuery: Challenge Lab | GSP340
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Deploy%20Kubernetes%20Applications%20on%20Google%20Cloud%20Challenge%20Lab/curio-bytes.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Build%20a%20Data%20Warehouse%20with%20BigQuery%3A%20Challenge%20Lab/CurioBytes.md
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
