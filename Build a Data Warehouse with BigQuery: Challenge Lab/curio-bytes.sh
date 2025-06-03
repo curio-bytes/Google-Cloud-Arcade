@@ -168,3 +168,6 @@ WHERE
     \`country_area\` IS NULL
 "
 
+echo
+echo "${RED_TEXT}${BOLD_TEXT}Congratulations for Completing the Lab !${RESET_FORMAT}"
+echo
