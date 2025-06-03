@@ -24,7 +24,7 @@ Deploy Kubernetes Apps on Google Cloud Challenge Lab | GSP318
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/blob/main/Deploy%20Kubernetes%20Applications%20on%20Google%20Cloud%20Challenge%20Lab/Curio-Bytes.md
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Deploy%20Kubernetes%20Applications%20on%20Google%20Cloud%20Challenge%20Lab/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
