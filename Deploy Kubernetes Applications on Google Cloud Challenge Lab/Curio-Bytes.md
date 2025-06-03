@@ -1,6 +1,6 @@
-<h1 align="center">
+<h2 align="center">
 Deploy Kubernetes Apps on Google Cloud Challenge Lab | GSP318
-</h1>
+</h2>
 
 <div align="center">
   <a href="https://www.cloudskillsboost.google/focuses/10457?parent=catalog" target="_blank" rel="noopener noreferrer">
