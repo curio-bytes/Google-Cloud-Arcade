@@ -34,3 +34,5 @@ sudo chmod +x curio-bytes.sh
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆  
 
+### Thanks for watching ! 💮
+---
