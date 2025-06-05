@@ -19,7 +19,7 @@ Enhancing User Interactivity in Looker with Liquid | GSP934
 </blockquote>
 
 ---
-### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/V3Q8Q31h2M8)
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/WC248Gl34qo)
 
 <p><strong>💻 1. Code for updating the order_items.view file</strong></p>
 Copy and paste the code in 'order_items.view' file.
@@ -490,5 +490,5 @@ explore: +order_items {
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
 
-### Thanks for watching ! 💮
+### Thanks for watching ! 💮 [Subscribe Youtube Channel ▶️](https://youtube.com/@curio_bytes_15?si=rJfZC1bLswC79o3V)
 ---
