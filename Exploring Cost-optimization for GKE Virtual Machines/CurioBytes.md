@@ -31,7 +31,7 @@ sudo chmod +x curio-bytes.sh
 </div>
 
 
-### -> After completing execution, follow the video instructions : 
+### -> After completing execution, follow the video instructions : [Video Link](https://youtu.be/Jznat7xYc08)
 
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
