@@ -183,7 +183,6 @@ view: order_items {
   }
 
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       order_item_id,
@@ -459,9 +458,8 @@ explore: events {
   }
 }
 
-# Place in `training_ecommerce` model
 explore: +order_items {
-  query: awesome_task_2 {
+  query: CurioBytesA {
     dimensions: [dynamic_timeframe]
     measures: [order_count]
     filters: [order_items.select_timeframe: "created^_month"]
@@ -469,9 +467,8 @@ explore: +order_items {
 }
 
 
-# Place in `training_ecommerce` model
 explore: +order_items {
-  query: awesome_task_3 {
+  query: CurioBytesB {
     dimensions: [products.category_comparison]
     measures: [order_count]
     filters: [products.select_category: "Jeans"]
@@ -479,9 +476,9 @@ explore: +order_items {
   
 }
 
-# Place in `training_ecommerce` model
+
 explore: +order_items {
-  query: awesome_task_4 {
+  query: CurioBytesC {
     dimensions: [users.country]
     measures: [users.dynamic_count]
     filters: [users.select_traffic_source: "Email"]
