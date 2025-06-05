@@ -20,7 +20,7 @@ Getting Started with Liquid to Customize the Looker User Experience | GSP933
 </blockquote>
 
 ---
-### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/NUi8zmTgKlg)
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/V3Q8Q31h2M8)
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>💻 1. Code for Updating the "users" view.</strong></p>
