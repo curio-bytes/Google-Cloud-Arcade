@@ -3,7 +3,7 @@ Exploring Cost-optimization for GKE Virtual Machines | GSP767
 </h2>
 
 <div align="center">
-  <a href="https://www.cloudskillsboost.google/games/6218/labs/39434" target="_blank" rel="noopener noreferrer">
+  <a href="https://www.cloudskillsboost.google/games/6219/labs/39440" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/Open_Lab-Cloud_Skills_Boost-4285F4?style=for-the-badge&logo=google&logoColor=white&labelColor=34A853" alt="Open Lab Badge">
   </a>
 </div>
