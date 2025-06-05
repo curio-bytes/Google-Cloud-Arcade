@@ -24,82 +24,7 @@ Getting Started with Liquid to Customize the Looker User Experience | GSP933
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>💻 1. Code for Updating the "users" view.</strong></p>
-Copy and paste the code in `users.view` file.
-
-  
-```bash
-view: user_facts {
-  derived_table: {
-    sql: SELECT
-           order_items.user_id AS user_id
-          ,COUNT(distinct order_items.order_id) AS lifetime_order_count
-          ,SUM(order_items.sale_price) AS lifetime_revenue
-          ,MIN(order_items.created_at) AS first_order_date
-          ,MAX(order_items.created_at) AS latest_order_date
-          FROM cloud-training-demos.looker_ecomm.order_items
-          WHERE {% condition select_date %} order_items.created_at {% endcondition %}
-          GROUP BY user_id;;
-  }
-  
-  filter: select_date {
-    type: date
-    suggest_explore: order_items
-    suggest_dimension: order_items.created_date
-  }
-
-  measure: count {
-    hidden: yes
-    type: count
-    drill_fields: [detail*]
-  }
-
-  dimension: user_id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.user_id ;;
-  }
-
-  dimension: lifetime_order_count {
-    type: number
-    sql: ${TABLE}.lifetime_order_count ;;
-  }
-
-  dimension: lifetime_revenue {
-    type: number
-    sql: ${TABLE}.lifetime_revenue ;;
-  }
-
-  measure: average_lifetime_revenue {
-    type: average
-    sql: ${TABLE}.lifetime_revenue ;;
-  }
-
-
-  measure: average_lifetime_order_count {
-    type: average
-    sql: ${TABLE}.lifetime_order_count ;;
-  }
-
-  dimension_group: first_order_date {
-    type: time
-    sql: ${TABLE}.first_order_date ;;
-  }
-
-  dimension_group: latest_order_date {
-    type: time
-    sql: ${TABLE}.latest_order_date ;;
-  }
-
-  set: detail {
-    fields: [user_id, lifetime_order_count, lifetime_revenue, first_order_date_time, latest_order_date_time]
-  }
-}
-```
-</div>
-
-<div style="padding: 15px; margin: 10px 0;">
-<p><strong>💻 2. Code for Updating the "order_items" view.</strong></p>
-Modify the `order_items` model file with following code.
+Copy and paste the code in 'users.view' file.
 
   
 ```bash
@@ -244,6 +169,8 @@ view: order_items {
       value_format_name: usd
     }
   
+  
+    # ----- Sets of fields for drilling ------
     set: detail {
       fields: [
         order_item_id,
@@ -255,6 +182,172 @@ view: order_items {
       ]
     }
   }
+
+```
+</div>
+
+<div style="padding: 15px; margin: 10px 0;">
+<p><strong>💻 2. Code for Updating the "order_items" view.</strong></p>
+Modify the 'order_items.views' file with following code.
+
+  
+```bash
+
+view: order_items {
+  sql_table_name: `cloud-training-demos.looker_ecomm.order_items`
+    ;;
+  drill_fields: [order_item_id]
+  
+  dimension: order_item_id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.id ;;
+  }
+  
+  dimension_group: created {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.created_at ;;
+  }
+  
+  dimension_group: delivered {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.delivered_at ;;
+  }
+  
+  dimension: inventory_item_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.inventory_item_id ;;
+  }
+  
+  dimension: order_id {
+    type: number
+    sql: ${TABLE}.order_id ;;
+  }
+  
+  dimension_group: returned {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.returned_at ;;
+  }
+  
+  dimension: sale_price {
+    type: number
+    sql: ${TABLE}.sale_price ;;
+  }
+  
+  dimension_group: shipped {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.shipped_at ;;
+  }
+  
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+  }
+  
+  dimension: user_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.user_id ;;
+  }
+  
+  
+  measure: average_sale_price {
+    type: average
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+    value_format_name: usd_0
+  }
+  
+  measure: order_item_count {
+    type: count
+    drill_fields: [detail*]
+  }
+  
+  measure: order_count {
+    type: count_distinct
+    sql: ${order_id} ;;
+  }
+  
+  measure: total_revenue {
+    type: sum
+    sql: ${sale_price} ;;
+    value_format_name: usd
+  }
+  
+  measure: total_revenue_conditional {
+    type: sum
+    sql: ${sale_price} ;;
+    value_format_name: usd
+    html: {% if value > 1300.00 %}
+            <p style="color: white; background-color: ##FFC20A; margin: 0; border-radius: 5px; text-align:center">{{ rendered_value }}</p>
+            {% elsif value > 1200.00 %}
+            <p style="color: white; background-color: #0C7BDC; margin: 0; border-radius: 5px; text-align:center">{{ rendered_value }}</p>
+            {% else %}
+            <p style="color: white; background-color: #6D7170; margin: 0; border-radius: 5px; text-align:center">{{ rendered_value }}</p>
+            {% endif %}
+            ;;
+  }
+  
+  measure: total_revenue_from_completed_orders {
+    type: sum
+    sql: ${sale_price} ;;
+    filters: [status: "Complete"]
+    value_format_name: usd
+  }
+  
+  
+  # ----- Sets of fields for drilling ------
+  set: detail {
+    fields: [
+      order_item_id,
+      users.last_name,
+      users.id,
+      users.first_name,
+      inventory_items.id,
+      inventory_items.product_name
+    ]
+  }
+}
+
 ```
 </div>
 
