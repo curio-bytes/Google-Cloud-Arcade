@@ -354,5 +354,5 @@ view: order_items {
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
 
-### Thanks for watching ! 💮
+### Thanks for watching ! 💮 [Subscribe Youtube Channel ▶️](https://youtube.com/@curio_bytes_15?si=rJfZC1bLswC79o3V)
 ---
