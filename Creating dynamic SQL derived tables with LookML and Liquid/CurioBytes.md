@@ -20,7 +20,7 @@ Creating dynamic SQL derived tables with LookML and Liquid | GSP932
 </blockquote>
 
 ---
-### 👉 Please follow vedio instructions to get complete points : 
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/NUi8zmTgKlg)
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>✅ 1. Code for creating a view called user_facts</strong></p>
