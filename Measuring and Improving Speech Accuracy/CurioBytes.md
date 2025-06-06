@@ -35,11 +35,12 @@ sudo chmod +x curio-bytes.sh
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>📔 Run the code in Notebook Terminal:</strong></p>
 
-```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Exploring%20Cost-optimization%20for%20GKE%20Virtual%20Machines/curio-bytes.sh
-sudo chmod +x curio-bytes.sh
-./curio-bytes.sh
 ```
+gsutil cp gs://spls/gsp758/notebook/measuring-accuracy.ipynb .
+gsutil cp gs://spls/gsp758/notebook/speech_adaptation.ipynb .
+gsutil cp gs://spls/gsp758/notebook/simple_wer_v2.py .
+```
+
 </div>
 
 ---
