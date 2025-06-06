@@ -24,7 +24,7 @@ Datastore: Qwik Start | GSP131
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Web%20Security%20Scanner%3A%20Qwik%20Start/curio-bytes.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Datastore%3A%20Qwik%20Start/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
