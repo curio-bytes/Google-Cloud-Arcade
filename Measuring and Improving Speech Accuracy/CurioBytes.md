@@ -30,7 +30,7 @@ sudo chmod +x curio-bytes.sh
 ```
 </div>
 
-### -> After completing execution, follow the video instructions : [Video Link](https://youtu.be/Jznat7xYc08)
+### -> After completing execution, follow the video instructions : [Video Link](https://youtu.be/6sUqSoo96zE)
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>📔 Run the code in Notebook Terminal:</strong></p>
