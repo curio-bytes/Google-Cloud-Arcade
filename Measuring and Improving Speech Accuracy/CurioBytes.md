@@ -24,7 +24,7 @@ Measuring and Improving Speech Accuracy | GSP758
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Exploring%20Cost-optimization%20for%20GKE%20Virtual%20Machines/curio-bytes.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Measuring%20and%20Improving%20Speech%20Accuracy/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
