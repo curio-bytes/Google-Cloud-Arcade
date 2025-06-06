@@ -25,14 +25,14 @@ echo
 
 read -p "$(echo -e ${WHITE_TEXT}${BOLD_TEXT}Enter Zone: ${RESET_FORMAT})" ZONE
 
-echo "${YELLOW_TEXT}${BOLD_TEXT}Enabling services...${RESET_FORMAT}"
+echo "${YELLOW_TEXT}${BOLD_TEXT}... Enabling services...${RESET_FORMAT}"
 gcloud services enable notebooks.googleapis.com
 
 gcloud services enable aiplatform.googleapis.com
 
-sleep 15
+sleep 10
 
-echo "${CYAN_TEXT}${BOLD_TEXT}Creating Notebook instance...${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}...Creating Notebook instance...${RESET_FORMAT}"
 echo
 
 export NOTEBOOK_NAME="lab-workbench"
@@ -48,7 +48,8 @@ echo "${GREEN_TEXT}${BOLD_TEXT}-> Notebook instance created successfully!${RESET
 
 PROJECT_ID=$(gcloud config get-value project)
 echo "${YELLOW_TEXT}${BOLD_TEXT}>> NOW FOLLOW VIDEO'S INSTRUCTIONS ....${RESET_FORMAT}"
+
 echo "${YELLOW_TEXT}${BOLD_TEXT}Click the following URL and follow video's instructions:${RESET_FORMAT}"
 echo "${BLUE_TEXT}${BOLD_TEXT}https://console.cloud.google.com/vertex-ai/workbench/user-managed?project=$DEVSHELL_PROJECT_ID ${RESET_FORMAT}"
 
-echo -e "${RED_TEXT}${BOLD_TEXT}Congratulations for completing the Lab !!${RESET_FORMAT}
+echo -e "${RED_TEXT}${BOLD_TEXT}Congratulations for completing the Lab !!${RESET_FORMAT}"
