@@ -197,3 +197,7 @@ remove_files() {
 }
 
 remove_files
+
+echo
+echo "${MAGENTA_TEXT}${BOLD_TEXT}---- Congratulations for Completing the Lab !${RESET_FORMAT}"
+echo
