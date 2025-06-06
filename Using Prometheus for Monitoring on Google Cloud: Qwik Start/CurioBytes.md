@@ -24,7 +24,7 @@ Using Prometheus for Monitoring on Google Cloud: Qwik Start | GSP1024
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Web%20Security%20Scanner%3A%20Qwik%20Start/curio-bytes.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/mainUsing%20Prometheus%20for%20Monitoring%20on%20Google%20Cloud%3A%20Qwik%20Start/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
