@@ -20,7 +20,7 @@ Answering Complex Questions Using Native Derived Tables with LookML | GSP935
 </blockquote>
 
 ---
-### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/V3Q8Q31h2M8)
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/LuWYaQeVDGw)
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>💻 1. Create new view named `brand_order_facts` </strong></p>
