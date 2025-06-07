@@ -101,7 +101,7 @@ echo "${YELLOW_TEXT}... Generating configuration script for GKE tutorial admin i
 echo
 
 cat > cp.sh <<'EOF_CP'
-sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
+sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
 echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
 
