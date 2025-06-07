@@ -13,6 +13,16 @@ RESET_FORMAT=$'\033[0m'
 BOLD_TEXT=$'\033[1m'
 UNDERLINE_TEXT=$'\033[4m'
 
+pause_for_check() {
+  echo
+  echo "${YELLOW_TEXT}${BOLD_TEXT}Please click 'Check my progress' in the lab UI, then press Y to continue...${RESET_FORMAT}"
+  read -p "Press Y to continue: " confirm
+  while [[ "$confirm" != "Y" && "$confirm" != "y" ]]; do
+    read -p "Press Y to continue: " confirm
+  done
+  echo
+}
+
 echo
 echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
 echo "${CYAN_TEXT}${BOLD_TEXT}            Solution From Curio Bytes         ${RESET_FORMAT}"
@@ -31,13 +41,15 @@ echo -n "${YELLOW_TEXT}${BOLD_TEXT}-> Enter your Project ID: ${RESET_FORMAT}"
 read PROJECT_ID
 export PROJECT_ID
 
-echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}1. Enabling the Data Catalog API...${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}.. Enabling the Data Catalog API...${RESET_FORMAT}"
 gcloud services enable datacatalog.googleapis.com --project=$PROJECT_ID
 
-# PostgreSQL Setup
 echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}2. Setting up PostgreSQL Connector...${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 1 Completed: Enable the Data Catalog API${RESET_FORMAT}"
+pause_for_check
+
+# PostgreSQL Setup
+echo "${MAGENTA_TEXT}${BOLD_TEXT}.. Setting up PostgreSQL Connector...${RESET_FORMAT}"
 cd ~
 gsutil cp gs://spls/gsp814/cloudsql-postgresql-tooling.zip .
 unzip -o cloudsql-postgresql-tooling.zip
@@ -46,6 +58,10 @@ sed -i "s/us-central1/$REGION/g" variables.tf
 sed -i "s/$REGION-a/$ZONE/g" variables.tf
 cd ~/cloudsql-postgresql-tooling
 bash init-db.sh
+
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 2 Completed: Create the PostgreSQL Database${RESET_FORMAT}"
+pause_for_check
 
 gcloud iam service-accounts create postgresql2dc-credentials \
   --display-name  "Service Account for PostgreSQL to Data Catalog connector" \
@@ -59,6 +75,10 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --quiet \
   --project $PROJECT_ID \
   --role "roles/datacatalog.admin"
+
+echo
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 3 Completed: Create Service Account for PostgreSQL${RESET_FORMAT}"
+pause_for_check
 
 cd infrastructure/terraform/
 public_ip_address=$(terraform output -raw public_ip_address)
@@ -74,6 +94,8 @@ docker run --rm --tty -v "$PWD":/data mesmacosta/postgresql2datacatalog:stable \
   --postgresql-user=$username \
   --postgresql-pass=$password \
   --postgresql-database=$database
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 4 Completed: Execute PostgreSQL to Data Catalog connector${RESET_FORMAT}"
+pause_for_check
 
 ./cleanup-db.sh
 docker run --rm --tty -v "$PWD":/data mesmacosta/postgresql-datacatalog-cleaner:stable \
@@ -83,8 +105,7 @@ docker run --rm --tty -v "$PWD":/data mesmacosta/postgresql-datacatalog-cleaner:
 ./delete-db.sh
 
 # MySQL Setup
-echo
-echo "${MAGENTA_TEXT}${BOLD_TEXT}3. Setting up MySQL Connector...${RESET_FORMAT}"
+echo "${MAGENTA_TEXT}${BOLD_TEXT}.. Setting up MySQL Connector...${RESET_FORMAT}"
 cd ~
 gsutil cp gs://spls/gsp814/cloudsql-mysql-tooling.zip .
 unzip -o cloudsql-mysql-tooling.zip
@@ -93,6 +114,8 @@ sed -i "s/us-central1/$REGION/g" variables.tf
 sed -i "s/$REGION-a/$ZONE/g" variables.tf
 cd ~/cloudsql-mysql-tooling
 bash init-db.sh
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 5 Completed: Create the MySQL Database${RESET_FORMAT}"
+pause_for_check
 
 gcloud iam service-accounts create mysql2dc-credentials \
   --display-name  "Service Account for MySQL to Data Catalog connector" \
@@ -106,6 +129,8 @@ gcloud projects add-iam-policy-binding $PROJECT_ID \
   --quiet \
   --project $PROJECT_ID \
   --role "roles/datacatalog.admin"
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 6 Completed: Create Service Account for MySQL${RESET_FORMAT}"
+pause_for_check
 
 cd infrastructure/terraform/
 public_ip_address=$(terraform output -raw public_ip_address)
@@ -121,6 +146,8 @@ docker run --rm --tty -v "$PWD":/data mesmacosta/mysql2datacatalog:stable \
   --mysql-user=$username \
   --mysql-pass=$password \
   --mysql-database=$database
+echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 7 Completed: Execute MySQL to Data Catalog connector${RESET_FORMAT}"
+pause_for_check
 
 ./cleanup-db.sh
 docker run --rm --tty -v "$PWD":/data mesmacosta/mysql-datacatalog-cleaner:stable \
@@ -130,5 +157,5 @@ docker run --rm --tty -v "$PWD":/data mesmacosta/mysql-datacatalog-cleaner:stabl
 ./delete-db.sh
 
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}✅ Congratulations for Completing the Lab!${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}🎉 All tasks completed successfully.${RESET_FORMAT}"
 echo
