@@ -15,7 +15,7 @@ UNDERLINE_TEXT=$'\033[4m'
 
 pause_for_check() {
   echo
-  echo "${YELLOW_TEXT}${BOLD_TEXT}Please click 'Check my progress' in the lab UI, then press Y to continue...${RESET_FORMAT}"
+  echo "${YELLOW_TEXT}${BOLD_TEXT}<< Please click 'Check my progress' in the lab UI, then press Y to continue...>>${RESET_FORMAT}"
   read -p "Press Y to continue: " confirm
   while [[ "$confirm" != "Y" && "$confirm" != "y" ]]; do
     read -p "Press Y to continue: " confirm
