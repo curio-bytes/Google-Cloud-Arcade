@@ -15,7 +15,7 @@ UNDERLINE_TEXT=$'\033[4m'
 
 pause_for_check() {
   echo
-  echo "${YELLOW_TEXT}${BOLD_TEXT}<< Please click 'Check my progress' in the lab UI, then press Y to continue...>>${RESET_FORMAT}"
+  echo "${YELLOW_TEXT}${BOLD_TEXT}Please click 'Check my progress' in the lab UI, then press Y to continue...${RESET_FORMAT}"
   read -p "Press Y to continue: " confirm
   while [[ "$confirm" != "Y" && "$confirm" != "y" ]]; do
     read -p "Press Y to continue: " confirm
@@ -67,13 +67,20 @@ gcloud iam service-accounts create postgresql2dc-credentials \
   --display-name  "Service Account for PostgreSQL to Data Catalog connector" \
   --project $PROJECT_ID
 
+echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for service account to become available...${RESET_FORMAT}"
+sleep 10
+
+until gcloud iam service-accounts describe "postgresql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com" &>/dev/null; do
+  echo "${YELLOW_TEXT}Waiting...${RESET_FORMAT}"
+  sleep 5
+done
+
 gcloud iam service-accounts keys create "postgresql2dc-credentials.json" \
   --iam-account "postgresql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member "serviceAccount:postgresql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com" \
   --quiet \
-  --project $PROJECT_ID \
   --role "roles/datacatalog.admin"
 
 echo
@@ -121,13 +128,20 @@ gcloud iam service-accounts create mysql2dc-credentials \
   --display-name  "Service Account for MySQL to Data Catalog connector" \
   --project $PROJECT_ID
 
+echo "${YELLOW_TEXT}${BOLD_TEXT}Waiting for service account to become available...${RESET_FORMAT}"
+sleep 10
+
+until gcloud iam service-accounts describe "mysql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com" &>/dev/null; do
+  echo "${YELLOW_TEXT}Waiting...${RESET_FORMAT}"
+  sleep 5
+done
+
 gcloud iam service-accounts keys create "mysql2dc-credentials.json" \
   --iam-account "mysql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
   --member "serviceAccount:mysql2dc-credentials@$PROJECT_ID.iam.gserviceaccount.com" \
   --quiet \
-  --project $PROJECT_ID \
   --role "roles/datacatalog.admin"
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 6 Completed: Create Service Account for MySQL${RESET_FORMAT}"
 pause_for_check
