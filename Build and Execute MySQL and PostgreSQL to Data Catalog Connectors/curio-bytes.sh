@@ -161,15 +161,8 @@ docker run --rm --tty -v "$PWD":/data mesmacosta/mysql2datacatalog:stable \
   --mysql-pass=$password \
   --mysql-database=$database
 echo "${GREEN_TEXT}${BOLD_TEXT}✅ Task 7 Completed: Execute MySQL to Data Catalog connector${RESET_FORMAT}"
-pause_for_check
 
-./cleanup-db.sh
-docker run --rm --tty -v "$PWD":/data mesmacosta/mysql-datacatalog-cleaner:stable \
-  --datacatalog-project-ids=$PROJECT_ID \
-  --rdbms-type=mysql \
-  --table-container-type=database
-./delete-db.sh
 
 echo
-echo "${GREEN_TEXT}${BOLD_TEXT}🎉 All tasks completed successfully.${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}------------ 🎉 Congratulations for completing the Lab!! --------------${RESET_FORMAT}"
 echo
