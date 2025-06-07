@@ -20,6 +20,10 @@ Build and Execute MySQL and PostgreSQL to Data Catalog Connectors | GSP814
 
 ---
 
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/MTL98x8b-NM)
+
+---
+
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
