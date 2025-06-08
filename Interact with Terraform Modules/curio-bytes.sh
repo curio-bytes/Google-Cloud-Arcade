@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Set colors
+# Terminal Colors
 BLACK=$(tput setaf 0)
 RED=$(tput setaf 1)
 GREEN=$(tput setaf 2)
@@ -9,6 +9,7 @@ BLUE=$(tput setaf 4)
 MAGENTA=$(tput setaf 5)
 CYAN=$(tput setaf 6)
 WHITE=$(tput setaf 7)
+
 BG_BLACK=$(tput setab 0)
 BG_RED=$(tput setab 1)
 BG_GREEN=$(tput setab 2)
@@ -17,10 +18,9 @@ BG_BLUE=$(tput setab 4)
 BG_MAGENTA=$(tput setab 5)
 BG_CYAN=$(tput setab 6)
 BG_WHITE=$(tput setab 7)
+
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
-
-#----------------------------------------------------start--------------------------------------------------#
 
 echo
 echo "${CYAN}${BOLD}==============================================${RESET}"
@@ -30,35 +30,38 @@ echo
 
 echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
 
-# Clone repo
+# Automatically retrieve project ID and region
+PROJECT_ID=$(gcloud config get-value project)
+REGION=$(gcloud config get-value compute/region)
+
+if [[ -z "$PROJECT_ID" || -z "$REGION" ]]; then
+  echo "${RED}ERROR: Project ID or Region not set in gcloud config.${RESET}"
+  exit 1
+fi
+
+echo "${GREEN}Using project: ${PROJECT_ID}, region: ${REGION}${RESET}"
+
+# Clone module
 git clone https://github.com/terraform-google-modules/terraform-google-network
-cd terraform-google-network
+cd terraform-google-network || exit
 git checkout tags/v6.0.1 -b v6.0.1
 
-cd ~/terraform-google-network/examples/simple_project
+cd examples/simple_project || exit
 
-# Define variables.tf
-cat > variables.tf <<EOF_END
+# Setup variables.tf
+cat > variables.tf <<EOF
 variable "project_id" {
   description = "The project ID to host the network in"
-  type        = string
+  default     = "$PROJECT_ID"
 }
-
 variable "network_name" {
   description = "The name of the VPC network being created"
-  type        = string
   default     = "example-vpc"
 }
+EOF
 
-variable "region" {
-  description = "Region for the subnets"
-  type        = string
-  default     = "us-central1"
-}
-EOF_END
-
-# Define main.tf
-cat > main.tf <<EOF_END
+# Setup main.tf
+cat > main.tf <<EOF
 module "test-vpc-module" {
   source       = "terraform-google-modules/network/google"
   version      = "~> 6.0"
@@ -70,19 +73,19 @@ module "test-vpc-module" {
     {
       subnet_name   = "subnet-01"
       subnet_ip     = "10.10.10.0/24"
-      subnet_region = var.region
+      subnet_region = "$REGION"
     },
     {
       subnet_name           = "subnet-02"
       subnet_ip             = "10.10.20.0/24"
-      subnet_region         = var.region
+      subnet_region         = "$REGION"
       subnet_private_access = true
       subnet_flow_logs      = true
     },
     {
       subnet_name               = "subnet-03"
       subnet_ip                 = "10.10.30.0/24"
-      subnet_region             = var.region
+      subnet_region             = "$REGION"
       subnet_flow_logs          = true
       subnet_flow_logs_interval = "INTERVAL_10_MIN"
       subnet_flow_logs_sampling = 0.7
@@ -91,15 +94,14 @@ module "test-vpc-module" {
     }
   ]
 }
-EOF_END
+EOF
 
-# Define outputs.tf
-cat > outputs.tf <<EOF_END
+cat > outputs.tf <<EOF
 output "network_name" {
-  description = "The name of the VPC network"
-  value       = var.network_name
+  description = "The name of the VPC"
+  value       = module.test-vpc-module.network_name
 }
-EOF_END
+EOF
 
 terraform init
 terraform apply --auto-approve
@@ -108,33 +110,11 @@ terraform destroy --auto-approve
 cd ~
 rm -rf terraform-google-network
 
-# Set up GCS website module
 mkdir -p modules/gcs-static-website-bucket
 cd modules/gcs-static-website-bucket
 
-touch website.tf variables.tf outputs.tf
-
-# README
-cat > README.md <<EOF
-# GCS static website bucket
-This module provisions Cloud Storage buckets configured for static website hosting.
-EOF
-
-# LICENSE
-cat > LICENSE <<EOF
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-EOF
-
 # website.tf
-cat > website.tf <<EOF_END
+cat > website.tf <<EOF
 resource "google_storage_bucket" "bucket" {
   name                        = var.name
   project                     = var.project_id
@@ -156,15 +136,15 @@ resource "google_storage_bucket" "bucket" {
   dynamic "retention_policy" {
     for_each = var.retention_policy == null ? [] : [var.retention_policy]
     content {
-      is_locked        = var.retention_policy.is_locked
-      retention_period = var.retention_policy.retention_period
+      is_locked        = retention_policy.value.is_locked
+      retention_period = retention_policy.value.retention_period
     }
   }
 
   dynamic "encryption" {
     for_each = var.encryption == null ? [] : [var.encryption]
     content {
-      default_kms_key_name = var.encryption.default_kms_key_name
+      default_kms_key_name = encryption.value.default_kms_key_name
     }
   }
 
@@ -177,65 +157,44 @@ resource "google_storage_bucket" "bucket" {
       }
       condition {
         age                   = lookup(lifecycle_rule.value.condition, "age", null)
-        created_before        = lookup(lifecycle_rule.value.condition, "created_before", null)
         with_state            = lookup(lifecycle_rule.value.condition, "with_state", null)
-        matches_storage_class = lookup(lifecycle_rule.value.condition, "matches_storage_class", null)
-        num_newer_versions    = lookup(lifecycle_rule.value.condition, "num_newer_versions", null)
       }
     }
   }
 }
-EOF_END
+EOF
 
 # variables.tf
-cat > variables.tf <<EOF_END
+cat > variables.tf <<EOF
 variable "name" {
   description = "The name of the bucket."
   type        = string
 }
 variable "project_id" {
-  description = "The ID of the project to create the bucket in."
+  description = "The ID of the project."
   type        = string
 }
 variable "location" {
-  description = "The location of the bucket."
+  description = "The location for the bucket."
   type        = string
 }
 variable "storage_class" {
-  description = "The Storage Class of the new bucket."
-  type        = string
-  default     = null
+  type    = string
+  default = "STANDARD"
 }
 variable "labels" {
-  description = "A set of key/value label pairs to assign to the bucket."
-  type        = map(string)
-  default     = null
-}
-variable "bucket_policy_only" {
-  description = "Enables Bucket Policy Only access to a bucket."
-  type        = bool
-  default     = true
-}
-variable "versioning" {
-  description = "While set to true, versioning is fully enabled for this bucket."
-  type        = bool
-  default     = true
+  type    = map(string)
+  default = {}
 }
 variable "force_destroy" {
-  description = "Delete bucket contents when deleting bucket."
-  type        = bool
-  default     = true
+  type    = bool
+  default = true
 }
-variable "iam_members" {
-  description = "The list of IAM members to grant permissions on the bucket."
-  type = list(object({
-    role   = string
-    member = string
-  }))
-  default = []
+variable "versioning" {
+  type    = bool
+  default = true
 }
 variable "retention_policy" {
-  description = "Bucket's data retention policy."
   type = object({
     is_locked        = bool
     retention_period = number
@@ -243,40 +202,37 @@ variable "retention_policy" {
   default = null
 }
 variable "encryption" {
-  description = "KMS key for object encryption."
   type = object({
     default_kms_key_name = string
   })
   default = null
 }
 variable "lifecycle_rules" {
-  description = "Bucket Lifecycle Rules."
   type = list(object({
     action    = any
     condition = any
   }))
   default = []
 }
-EOF_END
+EOF
 
 # outputs.tf
-cat > outputs.tf <<EOF_END
+cat > outputs.tf <<EOF
 output "bucket" {
-  description = "The created storage bucket"
+  description = "The created bucket resource"
   value       = google_storage_bucket.bucket
 }
-EOF_END
+EOF
 
 cd ~
 
-# Top-level main.tf for using the module
-cat > main.tf <<EOF_END
+# Root main.tf
+cat > main.tf <<EOF
 module "gcs-static-website-bucket" {
-  source     = "./modules/gcs-static-website-bucket"
-  name       = var.name
-  project_id = var.project_id
-  location   = var.region
-
+  source      = "./modules/gcs-static-website-bucket"
+  name        = "$PROJECT_ID"
+  project_id  = "$PROJECT_ID"
+  location    = "$REGION"
   lifecycle_rules = [{
     action = {
       type = "Delete"
@@ -287,42 +243,57 @@ module "gcs-static-website-bucket" {
     }
   }]
 }
-EOF_END
+EOF
 
-# outputs.tf
-cat > outputs.tf <<EOF_END
-output "bucket" {
-  description = "The created bucket resource"
-  value       = module.gcs-static-website-bucket.bucket
-}
-EOF_END
-
-# variables.tf
-cat > variables.tf <<EOF_END
+cat > variables.tf <<EOF
 variable "project_id" {
-  description = "The project to deploy resources in"
-  type        = string
-  default     = "$(gcloud config get-value project)"
+  type    = string
+  default = "$PROJECT_ID"
 }
 variable "name" {
-  description = "Name of the bucket"
-  type        = string
-  default     = "$(gcloud config get-value project)"
+  type    = string
+  default = "$PROJECT_ID"
 }
-variable "region" {
-  description = "Bucket region"
-  type        = string
-  default     = "us-central1"
+EOF
+
+cat > outputs.tf <<EOF
+output "bucket_name" {
+  description = "Static website bucket"
+  value       = module.gcs-static-website-bucket.bucket.name
 }
-EOF_END
+EOF
 
 terraform init
 terraform apply --auto-approve
 
-# Download HTML files and upload to bucket
-curl -s https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Interact%20with%20Terraform%20Modules/index.html -o index.html
-curl -s https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Interact%20with%20Terraform%20Modules/error.html -o error.html
+# HTML content
+cat > index.html <<EOF
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Static Website</title>
+  </head>
+  <body>
+    <p>Nothing to see here.</p>
+  </body>
+</html>
+EOF
 
-gsutil cp *.html gs://$(gcloud config get-value project)
+cat > error.html <<EOF
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>404: Not Found</title>
+  </head>
+  <body>
+    <h1>404: Not Found</h1>
+    <p>The page you're looking for doesn't exist.</p>
+  </body>
+</html>
+EOF
 
-echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
+gsutil cp index.html error.html gs://$PROJECT_ID
+
+echo "${BG_GREEN}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
