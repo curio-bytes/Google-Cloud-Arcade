@@ -21,8 +21,12 @@ BG_WHITE=`tput setab 7`
 
 BOLD=`tput bold`
 RESET=`tput sgr0`
-#----------------------------------------------------start--------------------------------------------------#
 
+echo
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}            Solution From Curio Bytes         ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo
 
 
 echo "${YELLOW}${BOLD}Starting${RESET}" "${GREEN}${BOLD}Execution${RESET}"
