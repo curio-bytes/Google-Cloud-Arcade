@@ -23,10 +23,6 @@ Interact with Terraform Modules | GSP751
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
-```
-export REGION=
-```
-
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Interact%20with%20Terraform%20Modules/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
