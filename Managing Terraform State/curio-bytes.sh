@@ -1,36 +1,25 @@
-BLACK=`tput setaf 0`
-RED=`tput setaf 1`
-GREEN=`tput setaf 2`
-YELLOW=`tput setaf 3`
-BLUE=`tput setaf 4`
-MAGENTA=`tput setaf 5`
-CYAN=`tput setaf 6`
-WHITE=`tput setaf 7`
+#!/bin/bash
 
-BG_BLACK=`tput setab 0`
-BG_RED=`tput setab 1`
-BG_GREEN=`tput setab 2`
-BG_YELLOW=`tput setab 3`
-BG_BLUE=`tput setab 4`
-BG_MAGENTA=`tput setab 5`
-BG_CYAN=`tput setab 6`
-BG_WHITE=`tput setab 7`
+# Exit on error
+set -e
 
-BOLD=`tput bold`
-RESET=`tput sgr0`
-#----------------------------------------------------start--------------------------------------------------#
+# 1. Get the current GCP Project ID
+PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 
-echo "${YELLOW}${BOLD}... Starting Execution ....${RESET}" 
+# 2. Create required directories and files
+mkdir -p terraform/state
+touch main.tf
 
-cat > main.tf <<EOF_END
-
+# 3. Write the provider and bucket resource block to main.tf
+cat <<EOF > main.tf
 provider "google" {
-  project     = "$DEVSHELL_PROJECT_ID"
-  region      = "$REGION"
+  project = "$PROJECT_ID"
+  region  = "$REGION"
 }
+
 resource "google_storage_bucket" "test-bucket-for-state" {
-  name        = "$DEVSHELL_PROJECT_ID"
-  location    = "US"
+  name                        = "${PROJECT_ID}-tfstate-bucket"
+  location                    = "US"
   uniform_bucket_level_access = true
 }
 
@@ -39,36 +28,38 @@ terraform {
     path = "terraform/state/terraform.tfstate"
   }
 }
-EOF_END
+EOF
 
+# 4. Initialize Terraform (Local backend)
+echo "Initializing Terraform with local backend..."
 terraform init
 
-terraform apply --auto-approve
+# 5. Apply configuration (create bucket)
+echo "Applying configuration to create GCS bucket..."
+terraform apply -auto-approve
 
-cat > main.tf <<EOF_END
-
-provider "google" {
-  project     = "$DEVSHELL_PROJECT_ID"
-  region      = "$REGION"
-}
-resource "google_storage_bucket" "test-bucket-for-state" {
-  name        = "$DEVSHELL_PROJECT_ID"
-  location    = "US"
-  uniform_bucket_level_access = true
-}
-
+# 6. Replace backend with GCS in main.tf
+cat <<EOF > backend_override.tf
 terraform {
   backend "gcs" {
-    bucket  = "$DEVSHELL_PROJECT_ID"
-    prefix  = "terraform/state"
+    bucket = "${PROJECT_ID}-tfstate-bucket"
+    prefix = "terraform/state"
   }
 }
-EOF_END
+EOF
 
-yes | terraform init -migrate-state
+# 7. Migrate state to GCS
+echo "Migrating state to GCS backend..."
+terraform init -migrate-state
 
-gsutil label ch -l "key:value" gs://$DEVSHELL_PROJECT_ID
+# 8. Simulate manual change via GCP Console (adding label)
+echo "Adding label manually to bucket for refresh test..."
+gcloud storage buckets update "${PROJECT_ID}-tfstate-bucket" --update-labels=key=value
 
-echo "${RED}${BOLD}Congratulations${RESET}" "${WHITE}${BOLD}for${RESET}" "${GREEN}${BOLD}Completing the Lab !!!${RESET}"
+# 9. Refresh state
+echo "Refreshing state to detect drift..."
+terraform refresh
 
-#-----------------------------------------------------end----------------------------------------------------------#
+# 10. Show final state
+echo "Final Terraform state:"
+terraform show
