@@ -20,7 +20,7 @@ echo "${CYAN_TEXT}${BOLD_TEXT}     Solution from Curio Bytes     ${RESET_FORMAT}
 echo "${CYAN_TEXT}${BOLD_TEXT}===================================${RESET_FORMAT}"
 echo
 
-read -p "$(echo -e "${CYAN_TEXT}${BOLD_TEXT}->vEnter NYC Bike Share PROJECT ID: ${RESET_FORMAT}")" PROJECT_ID_1
+read -p "$(echo -e "${CYAN_TEXT}${BOLD_TEXT}-> Enter NYC Bike Share PROJECT ID: ${RESET_FORMAT}")" PROJECT_ID_1
 read -p "$(echo -e "${CYAN_TEXT}${BOLD_TEXT}-> Enter NYC Motor Vehicle Collisions PROJECT ID: ${RESET_FORMAT}")" PROJECT_ID_2
 export REGION=$(gcloud compute project-info describe \
   --format="value(commonInstanceMetadata.items[google-compute-default-region])")
