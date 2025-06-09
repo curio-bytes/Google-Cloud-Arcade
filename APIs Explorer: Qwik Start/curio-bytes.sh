@@ -46,4 +46,4 @@ echo "${YELLOW_TEXT} ${BOLD_TEXT}-> Making the image publicly accessible...${RES
 gsutil acl ch -u allUsers:R gs://$BUCKET-bucket/demo-image.jpg
 
 
-echo -e "${RED_TEXT}${BOLD_TEXT}------------ Congratulations for Completing the Lab! ------------${RESET_FORMAT}
+echo -e "${RED_TEXT}${BOLD_TEXT}------------ Congratulations for Completing the Lab! ------------${RESET_FORMAT}"
