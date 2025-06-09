@@ -20,6 +20,13 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
+echo
+echo "${CYAN}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo "${CYAN}${BOLD_TEXT}            Solution From Curio Bytes         ${RESET_FORMAT}"
+echo "${CYAN}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo
+
+
 echo "${BG_MAGENTA}${BOLD}.... Starting Execution .....${RESET}"
 
 export REGION="${ZONE%-*}"
@@ -36,7 +43,8 @@ gcloud compute instances create vm-standard \
     --zone=$ZONE \
     --machine-type=e2-medium \
     --network-interface=network-tier=STANDARD
-
-echo "${BG_RED}${BOLD}Congratulations For Completing The Lab !!!${RESET}"
+    
+echo
+echo "${BG_YELLOW}${BOLD}----------- Congratulations For Completing The Lab !!! -----------${RESET}"
 
 #-----------------------------------------------------end----------------------------------------------------------#
