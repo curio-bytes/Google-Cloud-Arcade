@@ -9,6 +9,12 @@ RED_TEXT=`tput setaf 1`
 BOLD_TEXT=`tput bold`
 RESET_FORMAT=`tput sgr0`
 
+
+echo "${GREEN_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}         Solution from Curio Bytes     ${RESET_FORMAT}"
+echo "${GREEN_TEXT}${BOLD_TEXT}=======================================${RESET_FORMAT}"
+echo
+
 # Display initiation message
 echo "${BACKGROUND_RED}${BOLD_TEXT}... Initiating Execution...${RESET_FORMAT}"
 
