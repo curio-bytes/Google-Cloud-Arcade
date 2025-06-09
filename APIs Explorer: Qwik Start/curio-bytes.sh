@@ -35,7 +35,7 @@ gsutil mb -p $BUCKET gs://$BUCKET-bucket
 
 # Download the demo image
 echo "${YELLOW_TEXT} ${BOLD_TEXT}-> Downloading the demo image...${RESET_FORMAT}"
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/blob/main/APIs%20Explorer%3A%20Qwik%20Start/demo-image.jpg
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/APIs%20Explorer%3A%20Qwik%20Start/demo-image.jpg
 
 # Upload the demo image to the bucket
 echo "${YELLOW_TEXT} ${BOLD_TEXT}-> Uploading the demo image to the bucket...${RESET_FORMAT}"
@@ -46,4 +46,4 @@ echo "${YELLOW_TEXT} ${BOLD_TEXT}-> Making the image publicly accessible...${RES
 gsutil acl ch -u allUsers:R gs://$BUCKET-bucket/demo-image.jpg
 
 
-echo -e "${RED_TEXT}${BOLD_TEXT}Congratulations for Completing the Lab!${RESET_FORMAT}
+echo -e "${RED_TEXT}${BOLD_TEXT}------------ Congratulations for Completing the Lab! ------------${RESET_FORMAT}
