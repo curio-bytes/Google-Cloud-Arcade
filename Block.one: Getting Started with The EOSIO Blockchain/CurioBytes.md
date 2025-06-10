@@ -34,11 +34,7 @@ sudo chmod +x create_vm.sh
 </div>
 
 <div style="padding: 15px; margin: 10px 0;">
-<p><strong>>> Run this command inside VM SSH session : </strong></p>
-
-```
-export ZONE =   
-```
+<p><strong>>> Run this command after creating VM instance : </strong></p>
 
 ```
 gcloud compute ssh my-vm-1 --zone ZONE
