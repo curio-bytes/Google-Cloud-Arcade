@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Exit on error
+# Exit immediately on error
 set -e
 
-# Define ANSI color codes
+# Color codes
 CYAN_TEXT="\033[0;36m"
 YELLOW="\033[1;33m"
 BOLD_TEXT="\033[1m"
@@ -17,34 +17,40 @@ echo -e "${CYAN_TEXT}${BOLD_TEXT}            Solution From Curio Bytes         $
 echo -e "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
 echo
 
-# Prompt for regions
-read -p "Enter region for group1 (e.g., us-west1): " GROUP1_REGION
-read -p "Enter region for group2 (e.g., us-central1): " GROUP2_REGION
-read -p "Enter region for group3 (e.g., us-east1): " GROUP3_REGION
+# Prompt user for region inputs
+read -p ">> Enter region for group1 (e.g., us-west1): " GROUP1_REGION
+read -p ">> Enter region for group2 (e.g., us-central1): " GROUP2_REGION
+read -p ">> Enter region for group3 (e.g., us-east1): " GROUP3_REGION
 
-# Get current project ID
+# Get current GCP project ID
 PROJECT_ID=$(gcloud config get-value project)
 
-# Clone repo
+# Clone the Terraform repo
 git clone https://github.com/terraform-google-modules/terraform-google-lb-http.git
 cd terraform-google-lb-http/examples/multi-backend-multi-mig-bucket-https-lb
 
-# Modify main.tf to enable SSL
-sed -i '/gce-lb-https {/a \ \ create_ssl_certificate = true\n \ \ managed_ssl_certificate_domains = ["example.com"]' main.tf
+# Add SSL settings to main.tf (if not already present)
+if ! grep -q "create_ssl_certificate" main.tf; then
+  sed -i '/gce-lb-https {/a \ \ create_ssl_certificate = true\n \ \ managed_ssl_certificate_domains = ["example.com"]' main.tf
+fi
 
-# Update region values in variables.tf
-sed -i "s|group1_region.*|group1_region = \"$GROUP1_REGION\"|" variables.tf
-sed -i "s|group2_region.*|group2_region = \"$GROUP2_REGION\"|" variables.tf
-sed -i "s|group3_region.*|group3_region = \"$GROUP3_REGION\"|" variables.tf
-
-# Terraform operations
+# Initialize Terraform
 terraform init
-terraform plan -out=tfplan -var "project=$PROJECT_ID"
+
+# Plan Terraform with region vars
+terraform plan -out=tfplan \
+  -var "project=$PROJECT_ID" \
+  -var "group1_region=$GROUP1_REGION" \
+  -var "group2_region=$GROUP2_REGION" \
+  -var "group3_region=$GROUP3_REGION"
+
+# Apply the plan
 terraform apply -auto-approve tfplan
 
-# Get external IP and show URLs
+# Get Load Balancer IP
 EXTERNAL_IP=$(terraform output -raw load-balancer-ip)
 
+# Output the URLs
 echo
 echo "✅ Load Balancer IP: $EXTERNAL_IP"
 echo "🌐 Group1 URL: https://${EXTERNAL_IP}/group1"
