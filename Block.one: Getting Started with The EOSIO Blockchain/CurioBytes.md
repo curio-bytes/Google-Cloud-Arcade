@@ -37,11 +37,11 @@ sudo chmod +x create_vm.sh
 <p><strong>>> Run this command inside VM SSH session : </strong></p>
 
 ```
-export $ZONE =   
+export ZONE =   
 ```
 
 ```
-gcloud compute ssh my-vm-1 --zone YOUR_ZONE
+gcloud compute ssh my-vm-1 --zone ZONE
 ```
 ```
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Block.one%3A%20Getting%20Started%20with%20The%20EOSIO%20Blockchain/eosio_setup.sh
