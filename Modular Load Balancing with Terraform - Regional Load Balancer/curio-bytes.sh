@@ -9,14 +9,20 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 BOLD='\033[1m'
 
+CYAN_TEXT=$'\033[0;96m'
+WHITE_TEXT=$'\033[0;97m'
+RESET_FORMAT=$'\033[0m'
+BOLD_TEXT=$'\033[1m'
+UNDERLINE_TEXT=$'\033[4m'
+
+
 # Display Header
 clear
-echo -e "${BLUE}${BOLD}"
 
 echo
-echo "${GREEN}${BOLD}===================================${RESET_FORMAT}"
-echo "${GREEN}${BOLD}🚀     STARTING EXECUTION     🚀${RESET_FORMAT}"
-echo "${GREEN}${BOLD}===================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}            Solution From Curio Bytes         ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
 echo
 
 
@@ -38,7 +44,7 @@ set_region() {
     gcloud compute regions list --format="value(name)" | sort | pr -3 -t
     
     while true; do
-      read -p "Enter your preferred region (e.g., us-central1): " REGION
+      read -p ">> Enter your preferred region (e.g., us-central1): " REGION
       if gcloud compute regions describe $REGION &>/dev/null; then
         break
       else
