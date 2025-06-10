@@ -61,3 +61,7 @@ echo "🌐 Group3 URL (Region: $GROUP3_REGION): https://${EXTERNAL_IP}/group3"
 if command -v xdg-open &> /dev/null; then
   xdg-open "https://${EXTERNAL_IP}"
 fi
+
+
+echo 
+echo -e "${YELLOW}---- Congratulations for Completing the Lab!!!${NC}"
