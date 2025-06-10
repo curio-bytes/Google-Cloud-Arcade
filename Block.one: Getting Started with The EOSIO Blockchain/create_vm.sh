@@ -1,8 +1,14 @@
 #!/bin/bash
 
+
+echo "===================================================="
+echo "           Solution from Curio Bytes                "
+echo "===================================================="
+echo
+
 # Prompt user for region and zone
-read -p "Enter the region (e.g. us-central1): " REGION
-read -p "Enter the zone (e.g. us-central1-a): " ZONE
+read -p ">> Enter the region (e.g. us-central1): " REGION
+read -p ">> Enter the zone (e.g. us-central1-a): " ZONE
 
 # Set variables
 VM_NAME="my-vm-1"
