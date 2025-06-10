@@ -13,6 +13,11 @@ BOLD='\033[1m'
 clear
 echo -e "${BLUE}${BOLD}"
 
+echo
+echo "${GREEN}${BOLD}===================================${RESET_FORMAT}"
+echo "${GREEN}${BOLD}🚀     STARTING EXECUTION     🚀${RESET_FORMAT}"
+echo "${GREEN}${BOLD}===================================${RESET_FORMAT}"
+echo
 
 
 # Step 1: Authenticate and Set Project
