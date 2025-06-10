@@ -24,6 +24,10 @@ Setting up Jenkins on Kubernetes Engine | GSP117
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
+```
+export ZONE=
+```
+
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Setting%20up%20Jenkins%20on%20Kubernetes%20Engine/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
