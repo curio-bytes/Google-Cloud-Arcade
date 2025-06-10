@@ -2,7 +2,6 @@
 
 # Exit on error
 set -e
-set -x  # For verbose output
 
 # Define ANSI color codes
 CYAN_TEXT="\033[0;36m"
