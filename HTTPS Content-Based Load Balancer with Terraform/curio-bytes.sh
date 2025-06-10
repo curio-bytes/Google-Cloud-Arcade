@@ -6,6 +6,12 @@ set -e
 # Echo each command
 set -x
 
+echo
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}            Solution From Curio Bytes         ${RESET_FORMAT}"
+echo "${CYAN_TEXT}${BOLD_TEXT}==============================================${RESET_FORMAT}"
+echo
+
 # Prompt user for dynamic region input
 read -p ">> Enter region for group1 (e.g., us-west1): " GROUP1_REGION
 read -p ">> Enter region for group2 (e.g., us-central1): " GROUP2_REGION
