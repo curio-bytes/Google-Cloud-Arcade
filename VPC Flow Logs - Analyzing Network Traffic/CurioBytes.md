@@ -23,9 +23,6 @@ VPC Flow Logs - Analyzing Network Traffic | GSP212
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
-```
-export ZONE=
-```
 
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/VPC%20Flow%20Logs%20-%20Analyzing%20Network%20Traffic/curio-bytes.sh
@@ -34,77 +31,7 @@ sudo chmod +x curio-bytes.sh
 ```
 </div>
 
-<div style="padding: 15px; margin: 10px 0;">
 <p><strong>-> For the Sink name, enter "bq_vpcflows"</strong></p>
-
-```
-export MY_SERVER=$(gcloud compute instances describe web-server --zone "$ZONE" --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
-
-for ((i=1;i<=50;i++)); do curl $MY_SERVER; done
-```
-
-</div>
-
-<div style="padding: 15px; margin: 10px 0;">
-<p><strong>-> Add the following to the BigQuery Editor and REPLACE_YOUR_TABLE_ID with TABLE_ID while retaining the accents (`) on both sides:
-</strong></p>
-
-#### > Query 1 :- 
-
-```
-#standardSQL
-SELECT
-jsonPayload.src_vpc.vpc_name,
-SUM(CAST(jsonPayload.bytes_sent AS INT64)) AS bytes,
-jsonPayload.src_vpc.subnetwork_name,
-jsonPayload.connection.src_ip,
-jsonPayload.connection.src_port,
-jsonPayload.connection.dest_ip,
-jsonPayload.connection.dest_port,
-jsonPayload.connection.protocol
-FROM
-`REPLACE_YOUR_TABLE_ID`
-GROUP BY
-jsonPayload.src_vpc.vpc_name,
-jsonPayload.src_vpc.subnetwork_name,
-jsonPayload.connection.src_ip,
-jsonPayload.connection.src_port,
-jsonPayload.connection.dest_ip,
-jsonPayload.connection.dest_port,
-jsonPayload.connection.protocol
-ORDER BY
-bytes DESC
-LIMIT
-15
-
-```
-#### > Query 2 :- 
-
-```
-#standardSQL
-SELECT
-jsonPayload.connection.src_ip,
-jsonPayload.connection.dest_ip,
-SUM(CAST(jsonPayload.bytes_sent AS INT64)) AS bytes,
-jsonPayload.connection.dest_port,
-jsonPayload.connection.protocol
-FROM
-`REPLACE_YOUR_TABLE_ID`
-WHERE jsonPayload.reporter = 'DEST'
-GROUP BY
-jsonPayload.connection.src_ip,
-jsonPayload.connection.dest_ip,
-jsonPayload.connection.dest_port,
-jsonPayload.connection.protocol
-ORDER BY
-bytes DESC
-LIMIT
-15
-```
-
-</div>
-
-
 
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
