@@ -20,9 +20,13 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
+echo
+echo -e "${GREEN}==============================================${RESET_FORMAT}"
+echo -e "${GREEN}          Solution From Curio Bytes         ${RESET_FORMAT}"
+echo -e "${YELLOW}==============================================${RESET_FORMAT}"
+echo
 
-
-echo "${YELLOW}${BOLD}..... Starting Execution ......${RESET}"
+echo "${GREEN}${BOLD}..... Starting Execution ......${RESET}"
 
 gcloud services enable appengine.googleapis.com
 
@@ -30,13 +34,27 @@ sleep 10
 
 gcloud config set compute/region $REGION
 
+echo
+echo ">> Cloning Gihub repository ... "
+echo
+
 git clone https://github.com/GoogleCloudPlatform/golang-samples.git
+
+echo
 
 cd golang-samples/appengine/go11x/helloworld
 
+echo
+echo ">> Installing Google Cloud App Engine ..."
+echo
+
 sudo apt-get install google-cloud-sdk-app-engine-go
+
+echo
+echo ">> Deploying the App ..."
 gcloud app deploy
 
+echo
 echo "${RED}${BOLD}Congratulations${RESET}" "${WHITE}${BOLD}for${RESET}" "${GREEN}${BOLD}Completing the Lab !!!${RESET}"
 
 #-----------------------------------------------------end----------------------------------------------------------#
