@@ -23,6 +23,9 @@ Dataflow: Qwik Start - Python | GSP207
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
+```
+export REGION=
+```
 
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Dataflow%3A%20Qwik%20Start%20-%20Python/curio-bytes.sh
@@ -30,6 +33,8 @@ sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
 </div>
+
+* Go to `Dataflow Jobs` from [here](https://console.cloud.google.com/dataflow/jobs?)
 
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
