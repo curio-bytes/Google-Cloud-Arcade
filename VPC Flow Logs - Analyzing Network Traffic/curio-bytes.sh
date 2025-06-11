@@ -24,35 +24,111 @@ RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
 echo
-echo -e "${CYAN}==============================================${RESET_FORMAT}"
-echo -e "${CYAN}          Solution From Curio Bytes         ${RESET_FORMAT}"
-echo -e "${CYAN}==============================================${RESET_FORMAT}"
+echo -e "${YELLOW}==============================================${RESET_FORMAT}"
+echo -e "${YELLOW}          Solution From Curio Bytes         ${RESET_FORMAT}"
+echo -e "${YELLOW}==============================================${RESET_FORMAT}"
 echo
 
-echo "${BG_MAGENTA}${BOLD}..... Starting Execution .....${RESET}"
 
-export REGION="${ZONE%-*}"
 
-gcloud compute networks create vpc-net --project=$DEVSHELL_PROJECT_ID --description=lol --subnet-mode=custom --mtu=1460 --bgp-routing-mode=regional
+gcloud auth list
 
-gcloud compute networks subnets create vpc-subnet --project=$DEVSHELL_PROJECT_ID --range=10.1.3.0/24 --stack-type=IPV4_ONLY --network=vpc-net --region=$REGION --enable-flow-logs --logging-aggregation-interval=interval-5-sec --logging-flow-sampling=0.5 --logging-metadata=include-all
+export ZONE=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 
-gcloud compute --project=$DEVSHELL_PROJECT_ID firewall-rules create allow-http-ssh --direction=INGRESS --priority=1000 --network=vpc-net --action=ALLOW --rules=tcp:80,tcp:22 --source-ranges=0.0.0.0/0 --target-tags=http-server
+export REGION=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 
-gcloud compute instances create web-server --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --machine-type=e2-micro --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=vpc-subnet --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append --tags=http-server --create-disk=auto-delete=yes,boot=yes,device-name=web-server,image=projects/debian-cloud/global/images/debian-12-bookworm-v20240515,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ZONE/diskTypes/pd-balanced --no-shielded-secure-boot --no-shielded-vtpm --no-shielded-integrity-monitoring --labels=goog-ec-src=vm_add-gcloud --reservation-affinity=any
 
-sleep 80
+gcloud compute networks create vpc-net --project=$DEVSHELL_PROJECT_ID --description="Subscribe to Techcps" --subnet-mode=custom
 
-gcloud compute ssh --zone "$ZONE" "web-server" --project "$DEVSHELL_PROJECT_ID" --quiet --command 'sudo apt-get update && sudo apt-get install apache2 -y && echo "<!doctype html><html><body><h1>Hello World!</h1></body></html>" | sudo tee /var/www/html/index.html'
 
-bq mk bq_vpcflows
+gcloud compute networks subnets create vpc-subnet --project=$DEVSHELL_PROJECT_ID --network=vpc-net --region=$REGION --range=10.1.3.0/24 --enable-flow-logs
 
-echo "==========================================================================="
-echo "${CYAN}${BOLD}Click here: "${RESET}""${BLUE}${BOLD}""https://console.cloud.google.com/logs/query?"""${RESET}"
-echo "==========================================================================="
 
-echo 
-echo "${YELLOW}${BOLD}<< NOW FOLLOW VEDIO's INSTRUCTION >>${RESET}"
+sleep 100
+
+
+gcloud compute firewall-rules create allow-http-ssh \
+  --project=$DEVSHELL_PROJECT_ID \
+  --direction=INGRESS \
+  --priority=1000 \
+  --network=vpc-net \
+  --action=ALLOW \
+  --rules=tcp:80,tcp:22 \
+  --source-ranges=0.0.0.0/0 \
+  --target-tags=http-server
+
+
+gcloud compute instances create web-server \
+  --zone=$ZONE \
+  --project=$DEVSHELL_PROJECT_ID \
+  --machine-type=e2-micro \
+  --subnet=vpc-subnet \
+  --tags=http-server \
+  --image-family=debian-11 \
+  --image-project=debian-cloud \
+  --metadata=startup-script='#!/bin/bash
+    sudo apt update
+    sudo apt install apache2 -y
+    sudo systemctl start apache2
+    sudo systemctl enable apache2' \
+  --labels=server=apache
+
+
+gcloud compute firewall-rules create allow-http-alt \
+    --allow=tcp:80 \
+    --source-ranges=0.0.0.0/0 \
+    --target-tags=http-server \
+    --description="Allow HTTP traffic on alternate rule"
+
+
+
+bq mk bq_vpc_flows
+
+
+
+CP_IP=$(gcloud compute instances describe web-server --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+export MY_SERVER=$CP_IP
+
+for ((i=1;i<=50;i++)); do curl $MY_SERVER; done
+
 echo
+echo -e "\e[1;33m>> Edit Firewall\e[0m \e[1;34mhttps://console.cloud.google.com/net-security/firewall-manager/firewall-policies/details/allow-http-ssh?project=$DEVSHELL_PROJECT_ID\e[0m"
+echo
+echo -e "\e[1;33m>> Create an export sink\e[0m \e[1;34mhttps://console.cloud.google.com/logs/query;query=resource.type%3D%22gce_subnetwork%22%0Alog_name%3D%22projects%2F$DEVSHELL_PROJECT_ID%2Flogs%2Fcompute.googleapis.com%252Fvpc_flows%22;cursorTimestamp=2024-06-03T07:20:00.734122029Z;duration=PT1H?project=$DEVSHELL_PROJECT_ID\e[0m"
+echo
+
+
+while true; do
+    echo -ne "\e[1;93mDo you Want to proceed? (Y/n): \e[0m"
+    read confirm
+    case "$confirm" in
+        [Yy]) 
+            echo -e "\e[34mRunning the command...\e[0m"
+            break
+            ;;
+        [Nn]|"") 
+            echo "Operation canceled."
+            break
+            ;;
+        *) 
+            echo -e "\e[31mInvalid input. Please enter Y or N.\e[0m" 
+            ;;
+    esac
+done
+
+
+CP_IP=$(gcloud compute instances describe web-server --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+export MY_SERVER=$CP_IP
+
+for ((i=1;i<=50;i++)); do curl $MY_SERVER; done
+
+
+CP_IP=$(gcloud compute instances describe web-server --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)')
+
+export MY_SERVER=$CP_IP
+
+for ((i=1;i<=50;i++)); do curl $MY_SERVER; done
 
 #-----------------------------------------------------end----------------------------------------------------------#
