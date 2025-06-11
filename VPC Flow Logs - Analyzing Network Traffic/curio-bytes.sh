@@ -23,8 +23,13 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
+echo
+echo -e "${CYAN}==============================================${RESET_FORMAT}"
+echo -e "${CYAN}          Solution From Curio Bytes         ${RESET_FORMAT}"
+echo -e "${CYAN}==============================================${RESET_FORMAT}"
+echo
 
-echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
+echo "${BG_MAGENTA}${BOLD}..... Starting Execution .....${RESET}"
 
 export REGION="${ZONE%-*}"
 
