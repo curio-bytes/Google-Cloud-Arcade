@@ -23,7 +23,11 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
-
+echo
+echo -e "${YELLOW}==============================================${RESET_FORMAT}"
+echo -e "${YELLOW}          Solution From Curio Bytes         ${RESET_FORMAT}"
+echo -e "${YELLOW}==============================================${RESET_FORMAT}"
+echo
 
 echo "${BG_MAGENTA}${BOLD}....... Starting Execution ..........${RESET}"
 
