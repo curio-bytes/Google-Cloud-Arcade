@@ -23,6 +23,10 @@ VPC Networks - Controlling Access | GSP213
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
+```
+export ZONE=
+```
+
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/VPC%20Networks%20-%20Controlling%20Access/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
