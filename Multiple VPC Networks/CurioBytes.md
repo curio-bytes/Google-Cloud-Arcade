@@ -31,8 +31,6 @@ sudo chmod +x curio-bytes.sh
 ```
 </div>
 
-<p><strong>-> For the Sink name, enter "bq_vpcflows"</strong></p>
-
 ---
 ## 🎉 Congratulations! You Completed the Lab Successfully! 🏆
 
