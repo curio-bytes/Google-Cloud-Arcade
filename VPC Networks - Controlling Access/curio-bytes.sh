@@ -23,9 +23,14 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
+echo
+echo -e "${MAGENTA}${BOLD}==============================================${RESET_FORMAT}"
+echo -e "${MAGENTA}${BOLD}            Solution From Curio Bytes         ${RESET_FORMAT}"
+echo -e "${MAGENTA}${BOLD}==============================================${RESET_FORMAT}"
+echo
 
 
-echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
+echo "${BG_MAGENTA}${BOLD}... Starting Execution ....${RESET}"
 
 gcloud compute instances create blue --project=$DEVSHELL_PROJECT_ID --zone=$ZONE --machine-type=e2-medium --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default --metadata=enable-oslogin=true --maintenance-policy=MIGRATE --provisioning-model=STANDARD --tags=web-server,http-server --create-disk=auto-delete=yes,boot=yes,device-name=blue,image=projects/debian-cloud/global/images/debian-11-bullseye-v20230509,mode=rw,size=10,type=projects/$DEVSHELL_PROJECT_ID/zones/$ZONE/diskTypes/pd-balanced --no-shielded-secure-boot --shielded-vtpm --shielded-integrity-monitoring --labels=goog-ec-src=vm_add-gcloud --reservation-affinity=any
 
