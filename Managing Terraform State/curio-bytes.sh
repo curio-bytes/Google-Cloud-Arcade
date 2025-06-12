@@ -1,61 +1,74 @@
-#!/bin/bash
+BLACK=`tput setaf 0`
+RED=`tput setaf 1`
+GREEN=`tput setaf 2`
+YELLOW=`tput setaf 3`
+BLUE=`tput setaf 4`
+MAGENTA=`tput setaf 5`
+CYAN=`tput setaf 6`
+WHITE=`tput setaf 7`
 
-# Exit on any error
-set -e
+BG_BLACK=`tput setab 0`
+BG_RED=`tput setab 1`
+BG_GREEN=`tput setab 2`
+BG_YELLOW=`tput setab 3`
+BG_BLUE=`tput setab 4`
+BG_MAGENTA=`tput setab 5`
+BG_CYAN=`tput setab 6`
+BG_WHITE=`tput setab 7`
 
-# Step 1: Setup
-PROJECT_ID=$(gcloud config list --format 'value(core.project)')
-REGION="us-central1"  # Adjust as needed
-BUCKET_NAME="${PROJECT_ID}-tf-state-bucket"
-TF_DIR="terraform"
-TF_STATE_PATH="$TF_DIR/state"
+BOLD=`tput bold`
+RESET=`tput sgr0`
+#----------------------------------------------------start--------------------------------------------------#
 
-# Step 2: Create directories and main.tf
-mkdir -p "$TF_STATE_PATH"
-cd "$TF_DIR"
+echo "${YELLOW}${BOLD}Starting${RESET}" "${GREEN}${BOLD}Execution${RESET}"
 
-# Step 3: Write initial Terraform config with local backend
-cat > main.tf <<EOF
+cat > main.tf <<EOF_END
+
 provider "google" {
-  project = "${PROJECT_ID}"
-  region  = "${REGION}"
+  project     = "$DEVSHELL_PROJECT_ID"
+  region      = "$REGION"
 }
-
 resource "google_storage_bucket" "test-bucket-for-state" {
-  name                        = "${BUCKET_NAME}"
-  location                    = "US"
+  name        = "$DEVSHELL_PROJECT_ID"
+  location    = "US"
   uniform_bucket_level_access = true
 }
 
 terraform {
   backend "local" {
-    path = "state/terraform.tfstate"
+    path = "terraform/state/terraform.tfstate"
   }
 }
-EOF
+EOF_END
 
-# Step 4: Initialize and apply with local backend
 terraform init
-terraform apply -auto-approve
 
-# Step 5: Replace local backend with GCS backend
-cat > backend.tf <<EOF
+terraform apply --auto-approve
+
+cat > main.tf <<EOF_END
+
+provider "google" {
+  project     = "$DEVSHELL_PROJECT_ID"
+  region      = "$REGION"
+}
+resource "google_storage_bucket" "test-bucket-for-state" {
+  name        = "$DEVSHELL_PROJECT_ID"
+  location    = "US"
+  uniform_bucket_level_access = true
+}
+
 terraform {
   backend "gcs" {
-    bucket = "${BUCKET_NAME}"
-    prefix = "terraform/state"
+    bucket  = "$DEVSHELL_PROJECT_ID"
+    prefix  = "terraform/state"
   }
 }
-EOF
+EOF_END
 
-# Step 6: Reinitialize with state migration
-terraform init -migrate-state -reconfigure
+yes | terraform init -migrate-state
 
-# Step 7: Wait and notify to add label manually in GCP UI
-echo "⏳ Please open the Cloud Console -> Storage -> Buckets -> ${BUCKET_NAME}"
-echo "➕ Add label: key = key, value = value to the bucket."
-read -p "⚠️ Press ENTER once the label is added to continue with refresh..."
+gsutil label ch -l "key:value" gs://$DEVSHELL_PROJECT_ID
 
-# Step 8: Refresh state and show result
-terraform refresh
-terraform show
+echo "${RED}${BOLD}Congratulations${RESET}" "${WHITE}${BOLD}for${RESET}" "${GREEN}${BOLD}Completing the Lab !!!${RESET}"
+
+#-----------------------------------------------------end----------------------------------------------------------#
