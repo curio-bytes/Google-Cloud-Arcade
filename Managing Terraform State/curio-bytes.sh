@@ -20,7 +20,13 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
-echo "${YELLOW}${BOLD}Starting${RESET}" "${GREEN}${BOLD}Execution${RESET}"
+echo "===================================================="
+echo "           Solution from Curio Bytes                "
+echo "===================================================="
+echo
+
+echo "${YELLOW}${BOLD}... Starting Execution ...${RESET}"
+echo
 
 cat > main.tf <<EOF_END
 
@@ -69,6 +75,7 @@ yes | terraform init -migrate-state
 
 gsutil label ch -l "key:value" gs://$DEVSHELL_PROJECT_ID
 
-echo "${RED}${BOLD}Congratulations${RESET}" "${WHITE}${BOLD}for${RESET}" "${GREEN}${BOLD}Completing the Lab !!!${RESET}"
+echo
+echo "${RED}${BOLD}.... Congratulations Completing the Lab !!! ....${RESET}"
 
 #-----------------------------------------------------end----------------------------------------------------------#
