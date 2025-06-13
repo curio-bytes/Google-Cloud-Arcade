@@ -25,7 +25,7 @@ Implement Load Balancing on Compute Engine: Challenge Lab | GSP313
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/HTTPS%20Content-Based%20Load%20Balancer%20with%20Terraform/curio-bytes.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Implement%20Load%20Balancing%20on%20Compute%20Engine%3A%20Challenge%20Lab/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
