@@ -19,7 +19,7 @@ Creating Derived Tables Using LookML | GSP858
 </blockquote>
 
 ---
-### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/NUi8zmTgKlg)
+### 👉 Please follow video instructions to get complete points : [Video Link](https://youtu.be/xUYrWvmMlc4)
 
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>✅ 1. Code for creating a view called "order_details"</strong></p>
