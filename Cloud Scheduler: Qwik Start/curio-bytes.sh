@@ -23,13 +23,13 @@ BOLD=`tput bold`
 RESET=`tput sgr0`
 #----------------------------------------------------start--------------------------------------------------#
 
-echo "${BG_GREEN}${BOLD}=========================================${RESET}"
-echo "${BG_GREEN}${BOLD}       Solution from Curio Bytes         ${RESET}"
-echo "${BG_GREEN}${BOLD}=========================================${RESET}"
+echo "${GREEN}${BOLD}=========================================${RESET}"
+echo "${GREEN}${BOLD}       Solution from Curio Bytes         ${RESET}"
+echo "${GREEN}${BOLD}=========================================${RESET}"
 
 
 
-echo "${BG_MAGENTA}${BOLD}Starting Execution${RESET}"
+echo "${BG_MAGENTA}${BOLD}... Starting Execution ...${RESET}"
 
 gcloud services enable cloudscheduler.googleapis.com
 
@@ -38,6 +38,6 @@ gcloud pubsub topics create cron-topic
 gcloud pubsub subscriptions create cron-sub --topic cron-topic
 
 echo
-echo "${BG_RED}${BOLD}------------ Congratulations For Completing The Lab !!! --------------${RESET}"
+echo "${MAGENTA}${BOLD}------------ Congratulations For Completing The Lab !!! --------------${RESET}"
 
 #-----------------------------------------------------end----------------------------------------------------------#
