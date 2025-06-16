@@ -130,7 +130,6 @@ gcloud compute firewall-rules create http2 --network default --allow=tcp:80 \
 --source-ranges 0.0.0.0/0 --target-tags frontend
 
 echo
-echo -e "\e[1;31mDeleting the script (arcadecrew.sh) for safety purposes...\e[0m"
 rm -- "$0"
 
 echo
