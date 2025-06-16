@@ -45,9 +45,8 @@ echo
 echo "${GREEN_TEXT}${BOLD_TEXT}Speech-to-Text API response saved in 'result.json'.${RESET_FORMAT}"
 echo
 
-SCRIPT_PATH="$(realpath "$0")"
-echo "${RED_TEXT}Deleting script file: $SCRIPT_PATH${RESET_FORMAT}"
-rm -- "$SCRIPT_PATH"
+
+rm curio-bytes.sh
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}------- Congratulations for Completing the lab !! ---------${RESET_FORMAT}"
