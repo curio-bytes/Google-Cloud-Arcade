@@ -45,8 +45,9 @@ echo
 echo "${GREEN_TEXT}${BOLD_TEXT}Speech-to-Text API response saved in 'result.json'.${RESET_FORMAT}"
 echo
 
-# Cleanup: delete the script file
-rm -- "\$0"
+SCRIPT_PATH="$(realpath "$0")"
+echo "${RED_TEXT}Deleting script file: $SCRIPT_PATH${RESET_FORMAT}"
+rm -- "$SCRIPT_PATH"
 
 echo
 echo "${GREEN_TEXT}${BOLD_TEXT}------- Congratulations for Completing the lab !! ---------${RESET_FORMAT}"
