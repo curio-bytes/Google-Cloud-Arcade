@@ -27,7 +27,7 @@ fi
 
 # Prompt for Region if not already set
 if [[ -z "$REGION" ]]; then
-  echo -n "${YELLOW_TEXT}${BOLD_TEXT}-> Enter the region (e.g. us-central1): ${RESET_FORMAT}"
+  echo -n "${YELLOW_TEXT}${BOLD_TEXT}-> Enter the region : ${RESET_FORMAT}"
   read REGION
   export REGION
   gcloud config set compute/region $REGION
@@ -35,7 +35,7 @@ fi
 
 # Prompt for Zone if not already set
 if [[ -z "$ZONE" ]]; then
-  echo -n "${YELLOW_TEXT}${BOLD_TEXT}-> Enter the zone (e.g. us-central1-a): ${RESET_FORMAT}"
+  echo -n "${YELLOW_TEXT}${BOLD_TEXT}-> Enter the zone : ${RESET_FORMAT}"
   read ZONE
   export ZONE
   gcloud config set compute/zone $ZONE
@@ -66,6 +66,22 @@ echo
 
 gcloud config set compute/region $REGION
 gcloud config set compute/zone $ZONE
+
+echo
+echo "... Downloading required resources ..."
+echo
+
+gsutil cp gs://spls/gsp493/gke-rbac-demo.tar .
+
+echo ".. Extracting Files .."
+
+tar -xvf gke-rbac-demo.tar
+
+cd gke-rbac-demo
+
+make create
+
+
 
 echo
 echo "${MAGENTA_TEXT}${BOLD_TEXT}-> Step 3: Examining GKE Cluster Status${RESET_FORMAT}"
@@ -104,7 +120,6 @@ cat > cp.sh <<'EOF_CP'
 sudo apt-get install -y google-cloud-sdk-gke-gcloud-auth-plugin
 
 echo "export USE_GKE_GCLOUD_AUTH_PLUGIN=True" >> ~/.bashrc
-
 source ~/.bashrc
 
 export ZONE=$(gcloud container clusters list --format="value(location)" --filter="name=rbac-demo-cluster")
