@@ -20,6 +20,8 @@ Distributed Load Testing Using Kubernetes | GSP182
 
 ---
 
+### Please follow video's instruction carefully to get all tasks completed 👉 : [Video Link](https://youtu.be/koct79A1KVY)
+
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
