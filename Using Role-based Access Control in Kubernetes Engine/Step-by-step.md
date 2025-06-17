@@ -26,17 +26,17 @@ Using Role-based Access Control in Kubernetes Engine | GSP493
 * On the top-right corner, click on the Cloud Shell icon to open Cloud Shell.
 
 ```
-export Region=
+export REGION=
 ```
 
 ```
-export Zone=
+export ZONE=
 ```
 
-* In the Cloud Shell terminal, run the following command to set your region: 
-
+* In the Cloud Shell terminal, run the following command to set your region and zone:
 ```
-gcloud config set compute/zone us-east4-b
+gcloud config set compute/region REGION
+gcloud config set compute/zone ZONE
 ```
 ### Task 1. Clone Demo
 
