@@ -14,23 +14,13 @@ if [[ -z "$CLOUD_SHELL" ]]; then
   exit 1
 fi
 
-# Check for gcloud
-if ! command -v gcloud &>/dev/null; then
-  echo "❌ 'gcloud' is not installed. Cloud Shell should include this. Exiting."
-  exit 1
-fi
-
-# Check for kubectl
-if ! command -v kubectl &>/dev/null; then
-  echo "❌ 'kubectl' not found. Installing..."
-  sudo apt-get update && sudo apt-get install -y kubectl
-fi
-
-# Check for make, install if missing
-if ! command -v make &>/dev/null; then
-  echo "⚠️ 'make' not found. Installing 'make'..."
-  sudo apt-get update && sudo apt-get install -y make
-fi
+# Check for required commands
+for cmd in gcloud kubectl make; do
+  if ! command -v $cmd &>/dev/null; then
+    echo "⚠️ '$cmd' not found. Installing..."
+    sudo apt-get update && sudo apt-get install -y $cmd
+  fi
+done
 
 # ----------------------------
 # 📍 REGION & ZONE SETUP
@@ -42,13 +32,29 @@ echo "✅ Setting region and zone..."
 gcloud config set compute/region "$REGION"
 gcloud config set compute/zone "$ZONE"
 
+PROJECT_ID=$(gcloud config get-value project)
+
+# ----------------------------
+# 🧹 CLEANUP OF CONFLICTING RESOURCES
+# ----------------------------
+
+echo "🧹 Cleaning up existing service accounts and VPC..."
+
+for sa in gke-tutorial-admin-rbac gke-tutorial-auditor-rbac gke-tutorial-owner-rbac; do
+  gcloud iam service-accounts delete "$sa@$PROJECT_ID.iam.gserviceaccount.com" --quiet || echo "🔸 $sa already deleted or doesn't exist."
+done
+
+gcloud compute networks delete rbac-net --quiet || echo "🔸 VPC 'rbac-net' already deleted or doesn't exist."
+
 # ----------------------------
 # 📦 Task 1: Clone Demo and Setup Cluster
 # ----------------------------
 
 echo "📦 Downloading and extracting demo files..."
-gsutil cp gs://spls/gsp493/gke-rbac-demo.tar .
-tar -xvf gke-rbac-demo.tar
+if [ ! -d "gke-rbac-demo" ]; then
+  gsutil cp gs://spls/gsp493/gke-rbac-demo.tar .
+  tar -xvf gke-rbac-demo.tar
+fi
 cd gke-rbac-demo
 
 echo "🔧 Creating GKE cluster with Terraform..."
@@ -165,4 +171,4 @@ EOF
 
 kubectl apply -f manifests/pod-labeler-fix-2.yaml
 
-echo "✅ Script completed! All steps executed. You can now click 'Check my progress' in the lab interface."
+echo "✅ All steps completed! You may now click 'Check my progress' in the Qwiklabs lab."
