@@ -24,6 +24,10 @@ Creating a Persistent Disk | GSP004
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
+```
+export ZONE=
+```
+
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Creating%20a%20Persistent%20Disk/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
