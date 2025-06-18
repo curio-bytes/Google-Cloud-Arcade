@@ -24,9 +24,9 @@ Using Role-based Access Control in Kubernetes Engine | GSP493
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
 ```bash
-curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Using%20Role-based%20Access%20Control%20in%20Kubernetes%20Engine/curio-bytes1.sh
-sudo chmod +x curio-bytes1.sh
-./curio-bytes1.sh
+curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Using%20Role-based%20Access%20Control%20in%20Kubernetes%20Engine/curio-bytes.sh
+sudo chmod +x curio-bytes.sh
+./curio-bytes.sh
 ```
 </div>
 
