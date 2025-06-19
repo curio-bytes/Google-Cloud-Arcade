@@ -25,21 +25,21 @@ echo
 
 gcloud auth list
 
+echo
 export ZONE=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-zone])")
 export REGION=$(gcloud compute project-info describe --format="value(commonInstanceMetadata.items[google-compute-default-region])")
 
 export PROJECT_ID=$(gcloud config get-value project)
 gcloud config set project $DEVSHELL_PROJECT_ID
 
+echo
 gcloud config set project "$PROJECT_ID"
 
+echo
 git clone https://github.com/GoogleCloudPlatform/gke-logging-sinks-demo
 
-sleep 5
+sleep 2
 
-cd gke-logging-sinks-demo
-
-sleep 1
-
+echo
 gcloud config set compute/zone "$ZONE"
 gcloud config set compute/region "$REGION"
