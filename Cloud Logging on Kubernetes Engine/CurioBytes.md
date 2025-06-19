@@ -30,7 +30,9 @@ curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/
 sudo chmod +x curio-bytes.sh
 ./curio-bytes.sh
 ```
-
+```
+cd gke-logging-sinks-demo
+```
 
 
 ### Update the provider.tf file using following code :-
