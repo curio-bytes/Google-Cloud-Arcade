@@ -21,7 +21,7 @@ Cloud Logging on Kubernetes Engine | GSP483
 
 ---
 
-#### Please follow video's instruction carefully to get all tasks completed 👉 : [Video Link](https://youtu.be/koct79A1KVY)
+#### Please follow video's instruction carefully to get all tasks completed 👉 : [Video Link](https://youtu.be/-i6GREoOpS8)
 
 ### ☁️Run the code in Cloud Shell:
 
