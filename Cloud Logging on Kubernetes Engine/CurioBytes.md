@@ -42,7 +42,7 @@ provider "google" {
 ```
 Save and close the file.
 
-### Update the main.tf file by changing resource.type value:-
+### Update the main.tf file by changing resource.type value at line no 110 and 119:- 
 ```
 k8s_container
 ```
