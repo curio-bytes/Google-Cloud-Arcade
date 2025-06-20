@@ -42,12 +42,11 @@ export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 gsutil mb gs://$PROJECT_ID
 
 
-curl -L -o donuts.png https://github.com/Techcps/Google-Cloud-Skills-Boost/master/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/donuts.png
+curl -L -o city.png https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/city.png
 
-curl -L -o selfie.png https://github.com/Techcps/Google-Cloud-Skills-Boost/master/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/selfie.png
+curl -L -o donuts.png https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/donuts.png
 
-curl -L -o city.png https://github.com/Techcps/Google-Cloud-Skills-Boost/master/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/city.png
-
+curl -L -o selfie.png https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/selfie.png
 
 gsutil cp donuts.png gs://$PROJECT_ID/donuts.png
 
