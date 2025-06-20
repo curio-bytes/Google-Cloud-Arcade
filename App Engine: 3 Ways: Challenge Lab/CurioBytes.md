@@ -23,6 +23,10 @@ App Engine: 3 Ways: Challenge Lab | ARC112
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
+```
+export MESSAGE=""
+```
+
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/App%20Engine%3A%203%20Ways%3A%20Challenge%20Lab/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
