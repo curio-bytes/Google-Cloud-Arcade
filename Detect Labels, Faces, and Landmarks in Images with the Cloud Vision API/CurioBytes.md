@@ -24,10 +24,6 @@ Detect Labels, Faces, and Landmarks in Images with the Cloud Vision API | GSP037
 <div style="padding: 15px; margin: 10px 0;">
 <p><strong>☁️Run the code in Cloud Shell:</strong></p>
 
-```
-export ZONE=
-```
-
 ```bash
 curl -LO https://raw.githubusercontent.com/curio-bytes/Google-Cloud-Arcade/main/Detect%20Labels%2C%20Faces%2C%20and%20Landmarks%20in%20Images%20with%20the%20Cloud%20Vision%20API/curio-bytes.sh
 sudo chmod +x curio-bytes.sh
