@@ -21,6 +21,8 @@ Get Started with Sensitive Data Protection: Challenge Lab | ARC116
 
 ---
 
+### Please Follow Video's Instructions to get Complete Points 👉 [Video Link](https://youtu.be/BKqUn0TrN_M)
+
 ### ☁️Run the code in Cloud Shell:
 
 ```bash
