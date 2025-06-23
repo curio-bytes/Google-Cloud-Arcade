@@ -54,11 +54,12 @@ gcloud artifacts repositories create artifact-scanning-repo \
   --location="$REGION" \
   --description="Docker repository"
 
-sleep 2
-
 gcloud auth configure-docker "$REGION-docker.pkg.dev"
 
+
 mkdir vuln-scan && cd vuln-scan
+
+sleep 2
 
 # CREATE DOCKERFILE
 cat > Dockerfile << EOF
@@ -82,14 +83,14 @@ if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 EOF
 
+sleep 5
 # BUILD & PUSH IMAGE
 gcloud builds submit . -t "$REGION-docker.pkg.dev/${PROJECT_ID}/artifact-scanning-repo/sample-image"
 
-sleep 3
+sleep 10
 
 # TASK 2: IMAGE SIGNING - CREATE NOTE
-NOTE_ID=vulnz_note
-cat > vulnz_note.json << EOF
+cat > ./vulnz_note.json << EOM
 {
   "attestation": {
     "hint": {
@@ -97,19 +98,29 @@ cat > vulnz_note.json << EOF
     }
   }
 }
-EOF
+EOM
 
-curl -s -X POST \
+
+NOTE_ID=vulnz_note
+
+curl -vvv -X POST \
     -H "Content-Type: application/json"  \
     -H "Authorization: Bearer $(gcloud auth print-access-token)"  \
-    --data-binary @vulnz_note.json  \
+    --data-binary @./vulnz_note.json  \
     "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/?noteId=${NOTE_ID}"
+
+curl -vvv  \
+    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+    "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}"
+    
 
 # CREATE ATTESTOR
 ATTESTOR_ID=vulnz-attestor
 gcloud container binauthz attestors create $ATTESTOR_ID \
     --attestation-authority-note=$NOTE_ID \
     --attestation-authority-note-project=${PROJECT_ID}
+
+gcloud container binauthz attestors list
 
 # BIND NOTE VIEWER TO BINAUTHZ SA
 BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gserviceaccount.com"
@@ -128,11 +139,12 @@ cat > iam_request.json << EOF
 }
 EOF
 
-curl -s -X POST \
-    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+curl -X POST  \
     -H "Content-Type: application/json" \
-    --data-binary @iam_request.json \
+    -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+    --data-binary @./iam_request.json \
     "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/${NOTE_ID}:setIamPolicy"
+    
 
 sleep 4
 # TASK 3: KMS KEY CREATION
@@ -142,6 +154,7 @@ KEY_NAME=codelab-key
 KEY_VERSION=1
 
 gcloud kms keyrings create "$KEYRING" --location="$KEY_LOCATION"
+
 gcloud kms keys create "$KEY_NAME" \
   --location="$KEY_LOCATION" --keyring="$KEYRING" \
   --purpose=asymmetric-signing \
@@ -156,6 +169,8 @@ gcloud beta container binauthz attestors public-keys add \
   --keyversion-keyring="${KEYRING}" \
   --keyversion-key="${KEY_NAME}" \
   --keyversion="${KEY_VERSION}"
+
+gcloud container binauthz attestors list
 
 sleep 3
 # TASK 4: SIGN IMAGE
@@ -172,6 +187,10 @@ gcloud beta container binauthz attestations sign-and-create \
   --keyversion-key="${KEY_NAME}" \
   --keyversion="${KEY_VERSION}"
 
+gcloud container binauthz attestations list \
+   --attestor=$ATTESTOR_ID --attestor-project=${PROJECT_ID}
+
+   
 sleep 2
 # TASK 5: GKE CLUSTER & POLICY
 gcloud beta container clusters create binauthz \
@@ -181,6 +200,50 @@ gcloud beta container clusters create binauthz \
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
   --role="roles/container.developer"
+
+gcloud container binauthz policy export
+
+kubectl run hello-server --image gcr.io/google-samples/hello-app:1.0 --port 8080
+
+kubectl get pods
+
+kubectl delete pod hello-server
+
+sleep 4
+
+# Export current Binary Authorization policy
+gcloud container binauthz policy export > policy.yaml
+
+# Update policy.yaml to ALWAYS_DENY
+echo "Updating policy to ALWAYS_DENY..."
+sed -i "s/evaluationMode: ALWAYS_ALLOW/evaluationMode: ALWAYS_DENY/" policy.yaml
+
+# Apply the new DENY policy
+gcloud container binauthz policy import policy.yaml
+echo "Applied Binary Authorization policy with ALWAYS_DENY."
+
+# Give it a few seconds to propagate
+echo "Waiting 10 seconds for policy to propagate..."
+sleep 10
+
+# Attempt a deployment (expected to fail)
+echo "Trying to deploy hello-server (this should FAIL due to policy)..."
+set +e
+kubectl run hello-server --image gcr.io/google-samples/hello-app:1.0 --port 8080
+set -e
+
+# Revert the policy back to ALWAYS_ALLOW
+echo "Reverting policy back to ALWAYS_ALLOW..."
+sed -i "s/evaluationMode: ALWAYS_DENY/evaluationMode: ALWAYS_ALLOW/" policy.yaml
+
+sleep 3
+# Re-apply the reverted policy
+gcloud container binauthz policy import policy.yaml
+echo "Binary Authorization policy reverted to ALWAYS_ALLOW."
+
+# Clean up the hello-server deployment (if it partially created anything)
+kubectl delete deployment hello-server --ignore-not-found
+
 
 # TASK 6: AUTO SIGN VIA CLOUD BUILD
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
